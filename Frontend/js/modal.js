@@ -1,26 +1,29 @@
-// js/modal.js
+import { loginUser } from "./api.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-    const modal = document.querySelector(".modal");
-    const openBtn = document.querySelector(".open-modal");
-    const closeBtn = document.querySelector(".close-modal");
+  const form = document.getElementById("login-form");
+  const errorMsg = document.getElementById("login-error");
 
-    if (openBtn && modal) {
-        openBtn.addEventListener("click", () => {
-            modal.style.display = "block";
-        });
-    }
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    errorMsg.style.display = "none";
 
-    if (closeBtn && modal) {
-        closeBtn.addEventListener("click", () => {
-            modal.style.display = "none";
-        });
-    }
+    const email = form.email.value.trim();
+    const password = form.password.value.trim();
 
-    // Fermer la modale en cliquant en dehors
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
+    try {
+      const data = await loginUser(email, password);
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+        window.location.href = "index.html";
+      } else {
+        errorMsg.textContent = "Email ou mot de passe incorrect";
+        errorMsg.style.display = "block";
+      }
+    } catch (error) {
+      errorMsg.textContent = "Erreur réseau : impossible de joindre le serveur.";
+      errorMsg.style.display = "block";
+      console.error(error);
     }
+  });
 });
