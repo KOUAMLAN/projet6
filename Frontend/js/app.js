@@ -1,52 +1,29 @@
-// js/app.js
+const express = require('express');
+const path = require('path');
+const cors = require('cors');
+const helmet = require('helmet');
+const swaggerUi = require('swagger-ui-express');
+const yaml = require('yamljs');
+const swaggerDocs = yaml.load('swagger.yaml');
+const app = express();
 
-import { fetchWorks, fetchCategories } from "./api.js";
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(helmet({ crossOriginResourcePolicy: false }));
 
-document.addEventListener("DOMContentLoaded", async () => {
-    try {
-        const works = await fetchWorks();
-        displayWorks(works);
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
-        const categories = await fetchCategories();
-        displayCategories(categories, works);
-    } catch (error) {
-        alert("Erreur lors du chargement de la galerie.");
-        console.error(error);
-    }
-});
+const db = require("./models");
+const userRoutes = require('./routes/user.routes');
+const categoriesRoutes = require('./routes/categories.routes');
+const worksRoutes = require('./routes/works.routes');
 
-function displayWorks(works) {
-    const gallery = document.querySelector(".gallery");
-    if (!gallery) return;
-    gallery.innerHTML = "";
-    works.forEach(work => {
-        const figure = document.createElement("figure");
-        figure.innerHTML = `
-            <img src="${work.imageUrl}" alt="${work.title}">
-            <figcaption>${work.title}</figcaption>
-        `;
-        gallery.appendChild(figure);
-    });
-}
+db.sequelize.sync().then(() => console.log('db is ready'));
 
-function displayCategories(categories, works) {
-    const filters = document.querySelector(".filters");
-    if (!filters) return;
-    filters.innerHTML = "";
+app.use('/api/users', userRoutes);
+app.use('/api/categories', categoriesRoutes);
+app.use('/api/works', worksRoutes);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-    // Bouton "Tous"
-    const allBtn = document.createElement("button");
-    allBtn.textContent = "Tous";
-    allBtn.addEventListener("click", () => displayWorks(works));
-    filters.appendChild(allBtn);
-
-    categories.forEach(category => {
-        const btn = document.createElement("button");
-        btn.textContent = category.name;
-        btn.addEventListener("click", () => {
-            const filtered = works.filter(w => w.categoryId === category.id);
-            displayWorks(filtered);
-        });
-        filters.appendChild(btn);
-    });
-}
+module.exports = app;
