@@ -75,9 +75,6 @@ Email : sophie.bluel@test.tld
 
 Mot de passe : SOphie
 
-🛠️ Dépannage
-Erreur “Failed to fetch”
-→ Vérifie que le backend tourne et que l’URL dans le JS est bien http://localhost:5678/api/users/login.
 
 Erreur CORS
 → Le backend doit inclure app.use(cors()) dans app.js.
