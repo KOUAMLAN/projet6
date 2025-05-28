@@ -1,90 +1,103 @@
-Sophie Bluel - Portfolio Architecte d’Intérieur
-Projet 6 - OpenClassrooms
-Développé par [Ton Nom]
+Portfolio Sophie Bluel – Architecte d’Intérieur
+Projet développé pour l’agence ArchiWebos
+Développeur Front-End : [Votre Nom]
 
-🚀 Présentation
-Ce projet est une application web de portfolio pour Sophie Bluel, architecte d’intérieur.
-Il comporte :
+📝 Contexte & Scénario
+Vous avez rejoint l’équipe ArchiWebos en tant que développeur front-end pour renforcer l’équipe en charge du site portfolio d’une architecte d’intérieur.
 
-Un frontend statique (HTML/CSS/JS)
+Brief d’équipe :
+À la suite de votre première réunion, Charlotte, cheffe de projet, vous a transmis :
 
-Un backend Node.js/Express avec une base de données SQLite
+Le design Figma
+
+Le code back-end (Node.js/Express + SQLite)
+
+Le code front-end statique d’origine
+
+Le Kanban avec vos tâches
+
+🎯 Missions principales
+Développer la page de présentation des travaux de l’architecte
+(à partir du HTML fourni)
+
+Créer la page de connexion de l’administrateur
+(à concevoir de zéro)
+
+Développer la modale d’upload de nouveaux médias
+(à coder from scratch)
 
 📁 Structure du projet
 text
 projet6/
 │
-├── backend/
-│   ├── server.js
+├── Backend/
+│   ├── app.js
 │   ├── database.sqlite
-│   └── ... (autres fichiers backend)
+│   ├── package.json
+│   └── ...
 │
-├── Frontend/
-│   ├── login.html
+├── FrontEnd/
+│   ├── assets/
+│   │   └── style.css
 │   ├── index.html
-│   ├── js/
-│   │   ├── login.js
-│   │   └── api.js
-│   └── assets/
-│       └── style.css
+│   ├── index.js
+│   ├── login.js
+│   ├── modal.js
+│   ├── modale.html
+│   ├── page_connexion.html
+│   └── package-lock.json
 │
 └── README.md
 ⚙️ Installation & Lancement
 1. Backend
-Ouvre un terminal dans le dossier backend puis tape :
+Ouvre un terminal dans le dossier Backend :
 
 bash
-cd backend
+cd Backend
 npm install
 npm start
 Le serveur démarre sur le port 5678.
 
-La base de données SQLite est automatiquement créée si elle n’existe pas.
+La base de données SQLite est créée automatiquement si besoin.
 
-2. Frontend
-Le frontend est statique.
-Aucune installation npm n’est nécessaire dans Frontend !
+2. FrontEnd
+Le front-end est statique.
+Aucune installation npm n’est nécessaire.
 
-📢 Ouvre le dossier Frontend dans VS Code, puis :
-Clic droit sur login.html → Open with Live Server
+Ouvre le dossier FrontEnd dans VS Code.
 
-L’URL doit être :
-http://127.0.0.1:5500/Frontend/login.html
-ou
-http://127.0.0.1:5500/login.html (si tu as ouvert le dossier Frontend directement)
+Clique droit sur page_connexion.html ou index.html → Open with Live Server
 
 🔑 Identifiants de connexion
-Utilise ces identifiants pour te connecter :
+Pour accéder à l’espace administrateur, utilise :
 
-Email : sophie.bluel@test.tld
+Email : sophie.bluel@test.tld
 
-Mot de passe : SOphie
-
-Après connexion, il peut t’être demandé de changer ton mot de passe (fonctionnalité de sécurité).
-Tu seras ensuite redirigé(e) vers la page principale du site.
+Mot de passe : SOphie
 
 🛠️ Dépannage
-Erreur npm start dans Frontend
-→ Ne fais jamais npm start dans Frontend. Utilise uniquement Live Server.
-
 Erreur “Failed to fetch”
-→ Vérifie que le backend tourne et que l’URL du fetch dans le JS est bien http://localhost:5678/api/users/login ou http://127.0.0.1:5678/api/users/login.
+→ Vérifie que le backend tourne et que l’URL dans le JS est bien http://localhost:5678/api/users/login.
 
 Erreur CORS
-→ Le backend doit avoir app.use(cors()) dans server.js.
+→ Le backend doit inclure app.use(cors()) dans app.js.
+
+Erreur npm dans FrontEnd
+→ Ne fais jamais npm install ou npm start dans FrontEnd.
 
 Mot de passe incorrect
-→ Vérifie bien la casse : SOphie (majuscule S, O).
+→ Vérifie bien la casse : SOphie (S et O majuscules).
 
-💡 Conseils
+💡 Conseils de l’équipe
 Laisse toujours le terminal backend ouvert pendant que tu utilises le site.
 
 Ouvre le frontend avec Live Server, jamais en double-cliquant sur le HTML.
+
+Consulte le Kanban pour suivre l’avancement des tâches.
 
 Pour toute modification du backend, relance npm start.
 
 📄 Licence
 Projet réalisé dans le cadre de la formation OpenClassrooms.
 
-Bon test !
-N’hésite pas à me contacter pour toute question ou amélioration.
+
