@@ -16,14 +16,18 @@ async function getCategories() {
     });
 }
 
-function displayWorks(works) {
+function displayWorks(works, filterId = null) {
   let gallery = document.querySelector(".gallery");
   let galleryModal = document.getElementById("modal_projet");
   gallery.innerHTML = "";
   galleryModal.innerHTML = "";
 
-  for (const work of works) {
-    // Page principale
+  // Galerie principale : filtrée si filterId est spécifié
+  let worksToDisplay = works;
+  if (filterId && filterId !== "all") {
+    worksToDisplay = works.filter(work => work.category.id == filterId);
+  }
+  for (const work of worksToDisplay) {
     let image = document.createElement("img");
     let figure = document.createElement("figure");
     let figCaption = document.createElement("figCaption");
@@ -33,18 +37,16 @@ function displayWorks(works) {
     figure.appendChild(image);
     figure.appendChild(figCaption);
     gallery.appendChild(figure);
+  }
 
-    // Modale : uniquement la corbeille
+  // Modale : toujours toutes les images
+  for (const work of works) {
     let figureModal = document.createElement("figure");
     let imageModal = document.createElement("img");
     imageModal.src = work.imageUrl;
     imageModal.setAttribute("crossorigin", "anonymous");
     imageModal.style.height = "100px";
     figureModal.appendChild(imageModal);
-
-    let textGalleryModal = document.createElement("p");
-    textGalleryModal.innerHTML = "éditer";
-    figureModal.appendChild(textGalleryModal);
 
     const deleteButton = document.createElement("a");
     deleteButton.setAttribute("id", work.id);
@@ -104,7 +106,7 @@ async function indexLogout() {
   for (const filter of rest) {
     filter.addEventListener("click", () => {
       const newWorks = works.filter((work) => work.category.id == filter.id);
-      displayWorks(newWorks);
+      displayWorks(works, filter.id);
     });
   }
 

@@ -1,41 +1,19 @@
-const openModal = function (e) {
-  e.preventDefault();
-  const target = document.querySelector(e.target.getAttribute("href"));
-  target.style.display = "flex";
-  target.addEventListener("click", function eventModal(e) {
-    closeModal(e, target);
-    this.removeEventListener("click", eventModal);
+document.addEventListener('DOMContentLoaded', function() {
+  // Fermeture de la modale au clic sur la croix
+  document.querySelectorAll('.js-modal-close').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      document.querySelector('.modal[aria-hidden="false"]').style.display = 'none';
+      document.querySelector('.modal[aria-hidden="false"]').setAttribute('aria-hidden', 'true');
+    });
   });
-  target.querySelector(".js-modal-close").addEventListener("click", function eventModal(e) {
-    closeModal(e, target);
-    this.removeEventListener("click", eventModal);
+
+  // Fermeture de la modale au clic en dehors
+  window.addEventListener('click', function(e) {
+    if (e.target.classList.contains('modal')) {
+      e.target.style.display = 'none';
+      e.target.setAttribute('aria-hidden', 'true');
+    }
   });
-  target.querySelector(".js-modal-stop").addEventListener("click", stopPropagation);
-};
-
-const closeModal = function (e, target) {
-  e.stopPropagation();
-  e.preventDefault();
-  let modal = target;
-  modal.style.display = "none";
-  modal.querySelector(".js-modal-stop").removeEventListener("click", stopPropagation);
-};
-
-const stopPropagation = function (e) {
-  e.stopPropagation();
-};
-
-document.querySelectorAll(".js-modal").forEach((a) => {
-  a.addEventListener("click", openModal);
 });
 
-const modalButtonAdd = document.querySelector(".modal_button_add");
-modalButtonAdd.addEventListener("click", (e) => {
-  closeModal(e, document.querySelector("#modal1"));
-});
-
-const modalArrowLeft = document.querySelector(".arrow_left");
-modalArrowLeft.addEventListener("click", (e) => {
-  closeModal(e, document.querySelector("#modal2"));
-  document.getElementById("edit_projects").click();
-});
