@@ -1,7 +1,9 @@
+let isSubmitting = false;
+
 async function getWorks() {
   return await fetch("http://localhost:5678/api/works")
-    .then((data) => data.json())
-    .catch((error) => {
+    .then(data => data.json())
+    .catch(error => {
       console.log("Les données n'ont pas chargé" + error);
       return [];
     });
@@ -9,8 +11,8 @@ async function getWorks() {
 
 async function getCategories() {
   return await fetch("http://localhost:5678/api/categories")
-    .then((data) => data.json())
-    .catch((error) => {
+    .then(data => data.json())
+    .catch(error => {
       console.log("Les données n'ont pas chargé : " + error);
       return [];
     });
@@ -22,11 +24,12 @@ function displayWorks(works, filterId = null) {
   gallery.innerHTML = "";
   galleryModal.innerHTML = "";
 
-  // Galerie principale : filtrée si filterId est spécifié
   let worksToDisplay = works;
   if (filterId && filterId !== "all") {
     worksToDisplay = works.filter(work => work.category.id == filterId);
   }
+
+  // Galerie principale
   for (const work of worksToDisplay) {
     let image = document.createElement("img");
     let figure = document.createElement("figure");
@@ -48,6 +51,7 @@ function displayWorks(works, filterId = null) {
     imageModal.style.height = "100px";
     figureModal.appendChild(imageModal);
 
+    // Bouton poubelle uniquement
     const deleteButton = document.createElement("a");
     deleteButton.setAttribute("id", work.id);
     deleteButton.classList.add("fa-solid", "fa-trash-can", "delete_button");
@@ -58,10 +62,10 @@ function displayWorks(works, filterId = null) {
 
   // Suppression
   const deleteButtons = document.querySelectorAll(".delete_button");
-  deleteButtons.forEach((button) => {
-    button.addEventListener("click", async (event) => {
+  deleteButtons.forEach(button => {
+    button.addEventListener("click", async event => {
       event.preventDefault();
-      if (confirm("Êtes-vous sûr de vouloir supprimer ce fichier?")) {
+      if (confirm("Êtes-vous sûr de vouloir supprimer ce fichier ?")) {
         await deleteWork(button.getAttribute("id"));
         const works = await getWorks();
         displayWorks(works);
@@ -105,7 +109,7 @@ async function indexLogout() {
 
   for (const filter of rest) {
     filter.addEventListener("click", () => {
-      const newWorks = works.filter((work) => work.category.id == filter.id);
+      const newWorks = works.filter(work => work.category.id == filter.id);
       displayWorks(works, filter.id);
     });
   }
@@ -132,10 +136,11 @@ if (sessionStorage.token) {
   logout.innerHTML = "logout";
   logout.addEventListener("click", () => {
     sessionStorage.removeItem("token");
+    window.location.reload();
   });
 
   let edition = document.querySelectorAll(".edition");
-  edition.forEach((element) => {
+  edition.forEach(element => {
     element.hidden = false;
   });
 }
@@ -158,8 +163,13 @@ const form = document.querySelector("#image-form");
 const feedback = document.getElementById("add-image-feedback");
 
 if (form) {
-  form.addEventListener("submit", async (e) => {
+  form.addEventListener("submit", async e => {
     e.preventDefault();
+    if (isSubmitting) return; // Empêche la soumission multiple[3][6][7]
+    isSubmitting = true;
+    const btn = document.querySelector(".button_send_new_work");
+    btn.disabled = true;
+
     const formData = new FormData();
     const image = document.querySelector("#image-input").files[0];
     const title = document.getElementById("title-input").value;
@@ -188,19 +198,23 @@ if (form) {
         feedback.style.display = "none";
         document.querySelector("#modal2").style.display = "none";
         document.querySelector("#modal1").style.display = "flex";
+        form.reset();
+        document.querySelector(".preview").style.display = "none";
+        btn.disabled = true;
+        btn.style.background = "grey";
+        isSubmitting = false;
       }, 1000);
-      form.reset();
-      document.querySelector(".preview").style.display = "none";
-      document.querySelector(".button_send_new_work").disabled = true;
-      document.querySelector(".button_send_new_work").style.background = "grey";
     } else {
       feedback.style.display = "block";
       feedback.innerText = "Erreur lors de l'ajout.";
+      isSubmitting = false;
+      btn.disabled = false;
+      btn.style.background = "#1D6154";
     }
   });
 
   let previewDiv = document.querySelector(".preview");
-  document.getElementById("image-input").addEventListener("change", function (e) {
+  document.getElementById("image-input").addEventListener("change", function(e) {
     if (e.target.files[0]) {
       previewDiv.style.display = "flex";
       document.getElementById("preview-input").src = window.URL.createObjectURL(e.target.files[0]);
@@ -209,7 +223,7 @@ if (form) {
     }
   });
 
-  form.addEventListener("input", function (event) {
+  form.addEventListener("input", function(event) {
     let isValid = form.checkValidity();
     const btn = document.querySelector(".button_send_new_work");
     btn.disabled = !isValid;

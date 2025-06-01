@@ -1,10 +1,24 @@
 document.addEventListener('DOMContentLoaded', function() {
+  // Ouvre la modale au clic sur les liens "js-modal"
+  document.querySelectorAll('.js-modal').forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      const modalId = this.getAttribute('href').replace('#', '');
+      const modal = document.getElementById(modalId);
+      modal.style.display = 'flex';
+      modal.setAttribute('aria-hidden', 'false');
+    });
+  });
+
   // Fermeture de la modale au clic sur la croix
   document.querySelectorAll('.js-modal-close').forEach(btn => {
     btn.addEventListener('click', function(e) {
       e.preventDefault();
-      document.querySelector('.modal[aria-hidden="false"]').style.display = 'none';
-      document.querySelector('.modal[aria-hidden="false"]').setAttribute('aria-hidden', 'true');
+      const modal = document.querySelector('.modal[aria-hidden="false"]');
+      if (modal) {
+        modal.style.display = 'none';
+        modal.setAttribute('aria-hidden', 'true');
+      }
     });
   });
 
@@ -16,4 +30,5 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 });
+
 
